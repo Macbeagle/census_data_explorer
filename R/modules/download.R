@@ -1,28 +1,40 @@
 download_ui <- function(id) {
   ns <- NS(id)
-  tagList(
-    box(title = "Search DataPacks", status = "primary", solidHeader = TRUE, width = 8,
-        selectInput(ns("censusYear"), "Select Census year", choices = c("2021", "2016", "2011")),
-        selectInput(ns("dataPackType"), "Select DataPack type", 
-                    choices = c("General Community Profile" = "GCP",
-                                "Indigenous Profile" = "IP",
-                                "Time Series Profile" = "TSP",
-                                "Place of Enumeration Profile" = "PEP",
-                                "Working Population Profile" = "WPP")),
-        selectInput(ns("geography"), "Select geography", choices = NULL),  # Initialized with NULL, will be updated reactively
-        selectInput(ns("area"), "Select area", 
-                    choices = c("Australia" = "AUS",
-                                "New South Wales" = "NSW",
-                                "Victoria" = "VIC",
-                                "Queensland" = "QLD",
-                                "South Australia" = "SA",
-                                "Western Australia" = "WA",
-                                "Tasmania" = "TAS",
-                                "Northern Territory" = "NT",
-                                "Australian Capital Territory" = "ACT",
-                                "Other Territories" = "OT")),
-        actionButton(ns("downloadBtn"), "Download Data"),
-        textOutput(ns("downloadMessage"))
+  fluidRow(
+    column(
+      width = 5,
+      tagList(
+        box(title = "Search DataPacks", status = "primary", solidHeader = TRUE, width = 8,
+            selectInput(ns("censusYear"), "Select Census year", choices = c("2021", "2016", "2011")),
+            selectInput(ns("dataPackType"), "Select DataPack type", 
+                        choices = c("General Community Profile (GCP)" = "GCP",
+                                    "Indigenous Profile (IP)" = "IP",
+                                    "Time Series Profile (TSP)" = "TSP",
+                                    "Place of Enumeration Profile (PEP)" = "PEP",
+                                    "Working Population Profile (WPP)" = "WPP")),
+            selectInput(ns("geography"), "Select geography", choices = NULL),  # Initialized with NULL, will be updated reactively
+            selectInput(ns("area"), "Select area", 
+                        choices = c("Australia" = "AUS",
+                                    "New South Wales" = "NSW",
+                                    "Victoria" = "VIC",
+                                    "Queensland" = "QLD",
+                                    "South Australia" = "SA",
+                                    "Western Australia" = "WA",
+                                    "Tasmania" = "TAS",
+                                    "Northern Territory" = "NT",
+                                    "Australian Capital Territory" = "ACT",
+                                    "Other Territories (OT)" = "OT")),
+            actionButton(ns("downloadBtn"), "Download Data"),
+            textOutput(ns("downloadMessage"))
+        )
+      ),
+      style = "border-right: 1px solid #ddd;"
+    ),
+    column(
+      width = 5,
+      box(title = "Data Files", status = "primary", solidHeader = TRUE, width = 12,
+          uiOutput(ns("fileList"))
+      )
     )
   )
 }
@@ -30,7 +42,6 @@ download_ui <- function(id) {
 download_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    downloadStatus <- reactiveVal("Awaitng download...")
     # Dynamic update for geography options based on selected DataPack type
     observe({
       if (input$dataPackType == "TSP") {
@@ -69,7 +80,7 @@ download_server <- function(id) {
                                       "Local Government Areas (LGA)" = "LGA",
                                       "Suburbs and Localities (SAL)" = "SAL",
                                       "Remoteness Area (RA)" = "RA"))
-                                      
+        
         
       } else {
         # Full list of choices for other profiles
@@ -119,14 +130,8 @@ download_server <- function(id) {
         dest_path <- here("data", directory),
         extract_path <- here("data", directory)
       )
+      refresh_file_list(output, ns)
     })
-    output$status <- renderText({
-      downloadStatus()
-    })
+    refresh_file_list(output, ns)
   })
 }
-
-
-
-
-

@@ -32,6 +32,8 @@ base_path <- here()
 dest_path <- here("data")
 extract_path <- here("data")
 output_path <- here("data")
+#load data
+
 
 # invisible(sapply(
 #   list.files('R/pubr-source', full.names = TRUE, recursive = TRUE), function(i) {
