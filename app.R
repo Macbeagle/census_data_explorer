@@ -7,7 +7,6 @@ ui <- fluidPage(
             href='https://www.yourwebsite.com'>
             <img id='yourlogo' src='your-logo.png'>
         </a>"),
-  
   tabsetPanel(selected = "home_tab",
               # Home tab
               tabPanel(
@@ -34,14 +33,12 @@ ui <- fluidPage(
                 map_ui(id = "map")
               )
   ),
-  
   # Render footer
   hr(),
   box(
     # Footer content here
   )
 )
-
 # Define server logic
 server <- function(input, output, session) {
   # Placeholder for home tab server logic
@@ -56,6 +53,5 @@ server <- function(input, output, session) {
   # Placeholder for map tab server logic
   map_server("map")
 }
-
 # Run the application 
 shinyApp(ui = ui, server = server)

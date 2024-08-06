@@ -94,7 +94,14 @@ download_server <- function(id) {
                                       "Remoteness Area (RA)" = "RA"))
       }
     })
-    
+    observeEvent(input$download, {
+      output$status <- renderText({
+        withProgress(message = 'Downloading data...', value = 0, {
+          result <- download_census_data(input$year, input$pack, input$geography, input$area, input$dest_path, input$extract_path, progress = shiny::Progress$new())
+          downloadStatus(result)
+        })
+      })
+    })
     observeEvent(input$downloadBtn, {
       req(input$censusYear, input$dataPackType, input$geography, input$area)  # Ensure all inputs are filled in
       # Set up paths for download and extraction
@@ -112,9 +119,8 @@ download_server <- function(id) {
         dest_path <- here("data", directory),
         extract_path <- here("data", directory)
       )
-      downloadStatus(status_message)
     })
-    output$downloadMessage <- renderText({
+    output$status <- renderText({
       downloadStatus()
     })
   })
