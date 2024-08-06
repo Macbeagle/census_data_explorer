@@ -6,7 +6,7 @@ home_ui <- function(id) {
   )
 }
 
-home_server <- function(id) {
+home_server <- function(id, parentSession) {
   moduleServer(id, function(input, output, session) {
     # Home server logic here
   })

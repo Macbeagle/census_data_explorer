@@ -6,7 +6,7 @@ map_ui <- function(id) {
   )
 }
 
-map_server <- function(id) {
+map_server <- function(id, parentSession) {
   moduleServer(id, function(input, output, session) {
     # Map server logic here
   })

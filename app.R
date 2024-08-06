@@ -41,17 +41,12 @@ ui <- fluidPage(
 )
 # Define server logic
 server <- function(input, output, session) {
-  # Placeholder for home tab server logic
-  home_server("home")
-  
-  # Placeholder for download tab server logic
-  download_server("download")
-  
-  # Placeholder for view tab server logic
-  view_server("view")
-  
-  # Placeholder for map tab server logic
-  map_server("map")
+  activeData <- reactiveVal(NULL)
+  # Pass the main session to modules that need to control the tabs
+  home_server("home", session)
+  download_server("download", session, activeData)
+  view_server("view", session, activeData)
+  map_server("map", session)
 }
 # Run the application 
 shinyApp(ui = ui, server = server)
