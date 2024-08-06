@@ -38,7 +38,6 @@ download_ui <- function(id) {
     )
   )
 }
-
 download_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
@@ -80,8 +79,6 @@ download_server <- function(id) {
                                       "Local Government Areas (LGA)" = "LGA",
                                       "Suburbs and Localities (SAL)" = "SAL",
                                       "Remoteness Area (RA)" = "RA"))
-        
-        
       } else {
         # Full list of choices for other profiles
         updateSelectInput(session, ("geography"),
@@ -143,10 +140,9 @@ download_server <- function(id) {
           #   easyClose = TRUE,
           #   footer = NULL
           # ))
-          data_path <- here("data", basename(file))
-          print(data_path)
+          data_name <- basename(file)
           updateTabsetPanel(, "tabs", selected = "view_tab")
-          #metadata_source(data_path)
+          metadata_source(data_name)
         })
       })
     })
