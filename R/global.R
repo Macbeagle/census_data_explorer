@@ -3,7 +3,7 @@ pkgLoad <- function( packages = "required" ) {
     packages <- c( "readxl", "tidyverse", "openssl", "dplyr", "data.table",
                    "here", "httr","purrr","reshape2", "repr","plotly","scales",
                    "rsample", "recipes", "caret", "echarts4r", "shiny",
-                   "shinydashboard", "shinybrowser", "shinyWidgets"
+                   "shinydashboard", "shinybrowser", "shinyWidgets", "DT"
     )
   }
   packagecheck <- match( packages, utils::installed.packages()[,1] )
