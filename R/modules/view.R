@@ -13,7 +13,7 @@ view_ui <- function(id) {
               tabPanel("Tab 3", textOutput(ns("tab3"))),
               tabPanel("Tab 4", textOutput(ns("tab4"))),
               tabPanel("Tab 5", textOutput(ns("tab5"))),
-              tabPanel("Tab 6", textOutput(ns("tab6")))
+              tabPanel("Column Information", dataTableOutput(ns("columnIndex")))
             )
           )
         )
@@ -29,12 +29,10 @@ view_server <- function(id, parentSession, activeData) {
     # Render the table index data
     output$tableIndex <- renderDataTable({
       file <- activeData()
-      print(file)
       req(file)
       data <- read.csv(here("data", file, "Metadata", "data_def_tables.csv"))
-      print(data)
       tableIndexData(data)  # Store the data in the reactive value
-      datatable(data, options = list(pageLength = 5), selection = 'single')
+      datatable(data, options = list(pageLength = 20), selection = 'single')
     })
     
     # Observe the selected row in the table index
@@ -43,7 +41,7 @@ view_server <- function(id, parentSession, activeData) {
       if (length(selected_row)) {
         data <- tableIndexData()  # Retrieve the data from the reactive value
         selected_value <- data[selected_row, 1]
-        combined_data <- retrieve_table(selected_value, data, here("data", "") )
+        #combined_data <- retrieve_table(selected_value, data, here("data", "") )
        
         
         handle_table_selection(selected_value)
@@ -59,11 +57,17 @@ view_server <- function(id, parentSession, activeData) {
     output$tab3 <- renderText({ "Content for Tab 3" })
     output$tab4 <- renderText({ "Content for Tab 4" })
     output$tab5 <- renderText({ "Content for Tab 5" })
-    output$tab6 <- renderText({ "Content for Tab 6" })
+    
+    output$columnIndex <- renderDataTable({
+      file <- activeData()
+      req(file)
+      data <- read.csv(here("data", file, "Metadata", "data_def_columns.csv"))
+      datatable(data, options = list(pageLength = 20), selection = 'single')
+    })
   })
 }
 
 handle_table_selection <- function(selected_value) {
   # Placeholder function to handle the selected value
-  print(paste("Selected table:", selected_value))
+  print(selected_value)
 }
