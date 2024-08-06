@@ -133,5 +133,18 @@ download_server <- function(id) {
       refresh_file_list(output, ns)
     })
     refresh_file_list(output, ns)
+    observe({
+      files <- list.files("data", full.names = TRUE)
+      lapply(files, function(file) {
+        observeEvent(input[[basename(file)]], {
+          showModal(modalDialog(
+            title = "File Clicked",
+            paste("You clicked on:", basename(file)),
+            easyClose = TRUE,
+            footer = NULL
+          ))
+        })
+      })
+    })
   })
 }

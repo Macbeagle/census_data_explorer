@@ -57,7 +57,7 @@ refresh_file_list <- function(output, ns) {
     }
     tagList(
       lapply(files, function(file) {
-        tags$li(basename(file))
+        actionLink(ns(basename(file)), basename(file))
       })
     )
   })
