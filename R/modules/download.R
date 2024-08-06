@@ -137,12 +137,16 @@ download_server <- function(id) {
       files <- list.files("data", full.names = TRUE)
       lapply(files, function(file) {
         observeEvent(input[[basename(file)]], {
-          showModal(modalDialog(
-            title = "File Clicked",
-            paste("You clicked on:", basename(file)),
-            easyClose = TRUE,
-            footer = NULL
-          ))
+          # showModal(modalDialog(
+          #   title = "File Clicked",
+          #   paste("You clicked on:", basename(file)),
+          #   easyClose = TRUE,
+          #   footer = NULL
+          # ))
+          data_path <- here("data", basename(file))
+          print(data_path)
+          updateTabsetPanel(, "tabs", selected = "view_tab")
+          #metadata_source(data_path)
         })
       })
     })

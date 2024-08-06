@@ -7,7 +7,7 @@ ui <- fluidPage(
             href='https://www.yourwebsite.com'>
             <img id='yourlogo' src='your-logo.png'>
         </a>"),
-  tabsetPanel(selected = "home_tab",
+  tabsetPanel(id = "tabs", selected = "home_tab",
               # Home tab
               tabPanel(
                 value = "home_tab", 

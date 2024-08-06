@@ -1,5 +1,7 @@
-metadata_source <- function (files) {
+metadata_source <- function (file) {
   #read each table in the excel file and create dataframe based on tablename
+  files <- list.files(here("data", file,"Metadata"), full.names = TRUE)
+  print(files)
   data_def_source <- files[grepl("DataPack", files)]
   data_def <- read_excel_sheets(data_def_source)
   #process data definitions 
