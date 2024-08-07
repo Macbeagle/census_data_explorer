@@ -49,22 +49,6 @@ download_census_data <- function(c_year, c_pack, c_geo, c_area, dest_path, extra
   files <- list.files(extract_path, full.names = TRUE) # Get full path
   file.rename(files[1], file.path(extract_path, "Tables"))
 }
-
-refresh_file_list <- function(output, ns) {
-  output$fileList <- renderUI({
-    # Force reactivity by referencing a reactive value or expression if needed
-    files <- list.files(("data"), full.names = TRUE)
-    if (length(files) == 0) {
-      tags$p("No files found in the data folder.")
-    } else {
-      tags$ul(
-        lapply(files, function(file) {
-          tags$li(actionLink(ns(basename(file)), basename(file)))
-        })
-      )
-    }
-  })
-}
 read_excel_sheets <- function(file) {
   tables <- excel_sheets(file)
   dataframes <- list()

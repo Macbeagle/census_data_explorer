@@ -2,11 +2,11 @@ invisible(sapply(list.files("R", full.names = TRUE, recursive = TRUE), function(
   source(paste0(i))
 }))
 ui <- fluidPage(
-  HTML("<a id='title_logo'
-            alt='Your Logo'
-            href='https://www.yourwebsite.com'>
-            <img id='yourlogo' src='your-logo.png'>
-        </a>"),
+  # HTML("<a id='title_logo'
+  #           alt='Your Logo'
+  #           href='https://www.yourwebsite.com'>
+  #           <img id='yourlogo' src='your-logo.png'>
+  #       </a>"),
   tabsetPanel(id = "tabs", selected = "home_tab",
               # Home tab
               tabPanel(

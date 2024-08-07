@@ -114,7 +114,8 @@ download_server <- function(id, parentSession, activeData) {
       }
       tagList(
         lapply(files, function(file) {
-          actionLink(ns(basename(file)), basename(file))
+          file_name <- basename(file)
+          actionLink(ns(file_name), file_name)
         })
       )
     })
@@ -142,9 +143,7 @@ download_server <- function(id, parentSession, activeData) {
         output$downloadMessage <- renderText("No files found in the data folder.")
         return()
       }
-      #refresh_file_list(output, ns)
     })
-    #refresh_file_list(output, ns)
     observe({
       files <- files_reactive()
       lapply(files, function(file) {
