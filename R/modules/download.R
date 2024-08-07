@@ -119,6 +119,13 @@ download_server <- function(id, parentSession, activeData) {
         dest_path <- here("data", directory),
         extract_path <- here("data", directory)
       )
+      #check if empty and if so, delete and return error
+      files <- list.files(extract_path, full.names = TRUE)
+      if (length(files) == 0) {
+        unlink(extract_path, recursive = TRUE)
+        output$downloadMessage <- renderText("No files found in the data folder.")
+        return()
+      }
       refresh_file_list(output, ns)
     })
     refresh_file_list(output, ns)
@@ -127,7 +134,7 @@ download_server <- function(id, parentSession, activeData) {
       lapply(files, function(file) {
         observeEvent(input[[basename(file)]], {
           data_name <- basename(file)
-          activeData(data_name)   
+          activeData(data_name)
           metadata_source(data_name)
           updateTabsetPanel(parentSession, inputId = "tabs", selected = "view_tab")
         })

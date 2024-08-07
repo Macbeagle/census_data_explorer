@@ -1,5 +1,14 @@
 unzip_file <- function(zip_path, dest_path) {
+  tryCatch({ 
   unzip(zip_path, exdir = dest_path)
+  }, error = function(e) {
+    showModal(modalDialog(
+      title = "Error",
+      paste("Error unzipping file:", e$message),
+      easyClose = TRUE,
+      footer = NULL
+    ))
+  })
 }
 download_file <- function(url, dest_path, extract_path, file_name) {
   # Ensure the destination directory exists

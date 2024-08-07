@@ -10,9 +10,6 @@ view_ui <- function(id) {
             tabsetPanel(
               tabPanel("Table Index", dataTableOutput(ns("tableIndex"))),
               tabPanel("Data Table", dataTableOutput(ns("dataTable"))),
-              tabPanel("Tab 3", textOutput(ns("tab3"))),
-              tabPanel("Tab 4", textOutput(ns("tab4"))),
-              tabPanel("Tab 5", textOutput(ns("tab5"))),
               tabPanel("Column Information", dataTableOutput(ns("columnIndex")))
             )
           )
@@ -21,11 +18,11 @@ view_ui <- function(id) {
     )
   )
 }
-
 view_server <- function(id, parentSession, activeData) {
   moduleServer(id, function(input, output, session) {
     tableIndexData <- reactiveVal()
     table_data <- reactiveVal()  
+    table_selected <- reactiveVal()
     ns <- session$ns
     # Render the table index data
     output$tableIndex <- renderDataTable({
@@ -35,7 +32,6 @@ view_server <- function(id, parentSession, activeData) {
       tableIndexData(data)  # Store the data in the reactive value
       datatable(data, options = list(pageLength = 20), selection = 'single')
     })
-    
     # Observe the selected row in the table index
     observeEvent(input$tableIndex_rows_selected, {
       selected_row <- input$tableIndex_rows_selected
@@ -43,6 +39,7 @@ view_server <- function(id, parentSession, activeData) {
       file <- activeData()
       data <- tableIndexData()
       search <- as.character(data[selected_row, 1])
+      table_selected(search)
       files <- list.files(path = here("data", file, "Tables"), pattern = paste0(search, ".*\\.csv$"), full.names = TRUE)
       data_list <- map(files, read.csv)
       
@@ -54,30 +51,14 @@ view_server <- function(id, parentSession, activeData) {
       if (nrow(combined_data) < 30) {
         combined_data <- as.data.frame(t(combined_data))
       }
-      
-      # combined_data <- map_dfr(files, read.csv) %>%
-      #   bind_rows()
-      
-      
-      
-      #find all csvs in the Tables folder than have the search value in their name
-      #combine
-      
       table_data(combined_data)
     })
-    
     # Render the main data table
     output$dataTable <- renderDataTable({
       combined_data <- table_data()
-      
-      datatable(combined_data, options = list(pageLength = 5))
+      datatable(combined_data, options = list(pageLength = 30))
     })
-    
-    # Render text outputs for other tabs
-    output$tab3 <- renderText({ "Content for Tab 3" })
-    output$tab4 <- renderText({ "Content for Tab 4" })
-    output$tab5 <- renderText({ "Content for Tab 5" })
-    
+    # Render text outputs for other tab
     output$columnIndex <- renderDataTable({
       file <- activeData()
       req(file)
