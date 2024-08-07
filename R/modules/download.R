@@ -41,6 +41,7 @@ download_ui <- function(id) {
 download_server <- function(id, parentSession, activeData) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    files_reactive <- reactiveVal(list.files("data", full.names = TRUE))
     # Dynamic update for geography options based on selected DataPack type
     observe({
       if (input$dataPackType == "TSP") {
@@ -102,6 +103,21 @@ download_server <- function(id, parentSession, activeData) {
                                       "Remoteness Area (RA)" = "RA"))
       }
     })
+    observe({
+      invalidateLater(1000, session)
+      files_reactive(list.files("data", full.names = TRUE))
+    })
+    output$fileList <- renderUI({
+      files <- files_reactive()
+      if (length(files) == 0) {
+        return("No files found in the data folder.")
+      }
+      tagList(
+        lapply(files, function(file) {
+          actionLink(ns(basename(file)), basename(file))
+        })
+      )
+    })
     observeEvent(input$downloadBtn, {
       req(input$censusYear, input$dataPackType, input$geography, input$area)  # Ensure all inputs are filled in
       # Set up paths for download and extraction
@@ -120,17 +136,17 @@ download_server <- function(id, parentSession, activeData) {
         extract_path <- here("data", directory)
       )
       #check if empty and if so, delete and return error
-      files <- list.files(extract_path, full.names = TRUE)
+      files <- list.files("data", full.names = TRUE)
       if (length(files) == 0) {
         unlink(extract_path, recursive = TRUE)
         output$downloadMessage <- renderText("No files found in the data folder.")
         return()
       }
-      refresh_file_list(output, ns)
+      #refresh_file_list(output, ns)
     })
-    refresh_file_list(output, ns)
+    #refresh_file_list(output, ns)
     observe({
-      files <- list.files("data", full.names = TRUE)
+      files <- files_reactive()
       lapply(files, function(file) {
         observeEvent(input[[basename(file)]], {
           data_name <- basename(file)

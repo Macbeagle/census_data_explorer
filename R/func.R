@@ -52,15 +52,17 @@ download_census_data <- function(c_year, c_pack, c_geo, c_area, dest_path, extra
 
 refresh_file_list <- function(output, ns) {
   output$fileList <- renderUI({
-    files <- list.files("data", full.names = TRUE)
+    # Force reactivity by referencing a reactive value or expression if needed
+    files <- list.files(("data"), full.names = TRUE)
     if (length(files) == 0) {
-      return("No files found in the data folder.")
+      tags$p("No files found in the data folder.")
+    } else {
+      tags$ul(
+        lapply(files, function(file) {
+          tags$li(actionLink(ns(basename(file)), basename(file)))
+        })
+      )
     }
-    tagList(
-      lapply(files, function(file) {
-        actionLink(ns(basename(file)), basename(file))
-      })
-    )
   })
 }
 read_excel_sheets <- function(file) {
