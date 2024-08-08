@@ -133,7 +133,6 @@ download_server <- function(id, parentSession, activeData) {
       c_geo = input$geography
       c_area = input$area
       directory <- paste("Census", c_year, c_pack, c_geo, c_area, sep = "_")
-     
       download_census_data(
         c_year,
         c_pack,
