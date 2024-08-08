@@ -52,6 +52,11 @@ view_server <- function(id, parentSession, activeData) {
         combined_data <- as.data.frame(t(combined_data))
       }
       table_data(combined_data)
+      showModal(modalDialog(
+        title = paste("Table Loaded:", table_selected()),
+        easyClose = TRUE,
+        footer = NULL
+      ))
     })
     # Render the main data table
     output$dataTable <- renderDataTable({

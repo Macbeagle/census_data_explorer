@@ -4,7 +4,7 @@ pkgLoad <- function( packages = "required" ) {
                    "here", "httr","purrr","reshape2", "repr","plotly","scales",
                    "rsample", "recipes", "caret", "echarts4r", "shiny",
                    "shinydashboard", "shinybrowser", "shinyWidgets", "DT",
-                   "stringr"
+                   "stringr", "jsonlite"
     )
   }
   packagecheck <- match( packages, utils::installed.packages()[,1] )
