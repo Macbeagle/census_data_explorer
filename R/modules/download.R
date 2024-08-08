@@ -1,6 +1,7 @@
 download_ui <- function(id) {
   ns <- NS(id)
   fluidRow(
+    autoWaiter(),
     column(
       width = 5,
       tagList(
@@ -122,12 +123,17 @@ download_server <- function(id, parentSession, activeData) {
     observeEvent(input$downloadBtn, {
       req(input$censusYear, input$dataPackType, input$geography, input$area)  # Ensure all inputs are filled in
       # Set up paths for download and extraction
+      # Call your function
+      waiter_show( # show the waiter
+        html = spin_3(), 
+        color = transparent(.5)
+      )
       c_year = input$censusYear
       c_pack = input$dataPackType
       c_geo = input$geography
       c_area = input$area
       directory <- paste("Census", c_year, c_pack, c_geo, c_area, sep = "_")
-      # Call your function
+     
       download_census_data(
         c_year,
         c_pack,
@@ -140,17 +146,24 @@ download_server <- function(id, parentSession, activeData) {
       files <- list.files("data", full.names = TRUE)
       if (length(files) == 0) {
         unlink(extract_path, recursive = TRUE)
+        waiter_hide()
         output$downloadMessage <- renderText("No files found in the data folder.")
         return()
       }
+      waiter_hide()
     })
     observe({
       files <- files_reactive()
       lapply(files, function(file) {
         observeEvent(input[[basename(file)]], {
+          waiter_show( # show the waiter
+            html = spin_3(), 
+            color = transparent(.5)
+          )
           data_name <- basename(file)
           activeData(data_name)
           metadata_source(data_name)
+          waiter_hide()
           updateTabsetPanel(parentSession, inputId = "tabs", selected = "view_tab")
         })
       })

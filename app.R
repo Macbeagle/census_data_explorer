@@ -2,6 +2,7 @@ invisible(sapply(list.files("R", full.names = TRUE, recursive = TRUE), function(
   source(paste0(i))
 }))
 ui <- fluidPage(
+  autoWaiter(),
   # HTML("<a id='title_logo'
   #           alt='Your Logo'
   #           href='https://www.yourwebsite.com'>
@@ -27,11 +28,11 @@ ui <- fluidPage(
                 view_ui(id = "view")
               ),
               # Map tab
-              tabPanel(
-                value = "map_tab",
-                h4(id = "nav_title", "Map"),
-                map_ui(id = "map")
-              )
+              # tabPanel(
+              #   value = "map_tab",
+              #   h4(id = "nav_title", "Map"),
+              #   map_ui(id = "map")
+              # )
   ),
   # Render footer
   hr(),
@@ -46,7 +47,7 @@ server <- function(input, output, session) {
   home_server("home", session)
   download_server("download", session, activeData)
   view_server("view", session, activeData)
-  map_server("map", session)
+  # map_server("map", session)
 }
 # Run the application 
 shinyApp(ui = ui, server = server)
