@@ -116,7 +116,10 @@ download_server <- function(id, parentSession, activeData) {
       tagList(
         lapply(files, function(file) {
           file_name <- basename(file)
-          actionLink(ns(file_name), file_name)
+          tagList(
+            actionLink(ns(file_name), file_name),
+            actionButton(ns(paste0("delete_", file_name)), "Delete", class = "btn-danger")
+          )
         })
       )
     })
@@ -128,11 +131,21 @@ download_server <- function(id, parentSession, activeData) {
         html = spin_3(), 
         color = transparent(.5)
       )
+
       c_year = input$censusYear
       c_pack = input$dataPackType
       c_geo = input$geography
       c_area = input$area
       directory <- paste("Census", c_year, c_pack, c_geo, c_area, sep = "_")
+      if (dir.exists(directory)) {
+        showModal(modalDialog(
+          title = "Error",
+          "The folder already exists.",
+          easyClose = TRUE,
+          footer = NULL
+        ))
+        return()
+      }
       download_census_data(
         c_year,
         c_pack,
@@ -141,6 +154,7 @@ download_server <- function(id, parentSession, activeData) {
         dest_path <- here("data", directory),
         extract_path <- here("data", directory)
       )
+
       #check if empty and if so, delete and return error
       files <- list.files("data", full.names = TRUE)
       if (length(files) == 0) {
@@ -164,6 +178,20 @@ download_server <- function(id, parentSession, activeData) {
           metadata_source(data_name)
           waiter_hide()
           updateTabsetPanel(parentSession, inputId = "tabs", selected = "view_tab")
+        })
+        observeEvent(input[[paste0("delete_", basename(file))]], {
+          waiter_show(
+            html = spin_3(),
+            color = transparent(.5)
+          )
+          data_name <- basename(file)
+          directory <- paste("Census", input$censusYear, input$dataPackType, input$geography, input$area, sep = "_")
+          dir_path <- file.path("data", directory)
+          if (dir.exists(dir_path)) {
+            unlink(dir_path, recursive = TRUE)
+            files_reactive(list.files("data", full.names = TRUE))
+          }
+          waiter_hide()
         })
       })
     })
