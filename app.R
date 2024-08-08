@@ -2,7 +2,37 @@ invisible(sapply(list.files("R", full.names = TRUE, recursive = TRUE), function(
   source(paste0(i))
 }))
 ui <- fluidPage(
+  tags$style(
+    ".file-list-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    
+    .file-name {
+      margin-right: 10px;
+    }
+    
+    .file-actions {
+      display: flex;
+      align-items: center;
+    }
+    
+    .file-actions > a,
+    .file-actions > button {
+      margin-left: 10px;
+    }"
+  ),
   autoWaiter(),
+  # rest of your UI definition
   # HTML("<a id='title_logo'
   #           alt='Your Logo'
   #           href='https://www.yourwebsite.com'>
@@ -40,6 +70,7 @@ ui <- fluidPage(
     # Footer content here
   )
 )
+
 # Define server logic
 server <- function(input, output, session) {
   activeData <- reactiveVal(NULL)
