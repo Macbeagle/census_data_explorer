@@ -89,7 +89,7 @@ download_server <- function(id, parentSession, activeData) {
         updateSelectInput(session, ("geography"),
                           choices = c("All geographies" = "all",
                                       "Australia" = "AUS",
-                                      "State/Territory (ST)" = "ST", 
+                                      "State/Territory (STE)" = "STE", 
                                       "Statistical Area 4 (SA4)" = "SA4", 
                                       "Statistical Area 3 (SA3)" = "SA3", 
                                       "Statistical Area 2 (SA2)" = "SA2", 
@@ -120,9 +120,8 @@ download_server <- function(id, parentSession, activeData) {
         lapply(files, function(file) {
           file_name <- basename(file)
           div(class = "file-item",
-              div(class = "file-name", file_name),
+              actionLink(ns(file_name), file_name, class = "file-name"),
               div(class = "file-actions",
-                  actionLink(ns(file_name), ""),
                   actionButton(ns(paste0("delete_", file_name)), "Delete", class = "btn-danger")
               )
           )
@@ -142,6 +141,7 @@ download_server <- function(id, parentSession, activeData) {
       c_geo = input$geography
       c_area = input$area
       directory <- paste("Census", c_year, c_pack, c_geo, c_area, sep = "_")
+      print(directory)
       if (dir.exists(directory)) {
         showModal(modalDialog(
           title = "Error",
@@ -159,15 +159,6 @@ download_server <- function(id, parentSession, activeData) {
         dest_path <- here("data", directory),
         extract_path <- here("data", directory)
       )
-      
-      #check if empty and if so, delete and return error
-      files <- list.files("data", full.names = TRUE)
-      if (length(files) == 0) {
-        unlink(extract_path, recursive = TRUE)
-        waiter_hide()
-        output$downloadMessage <- renderText("No files found in the data folder.")
-        return()
-      }
       waiter_hide()
     })
     observe({

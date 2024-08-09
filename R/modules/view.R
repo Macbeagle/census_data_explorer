@@ -56,9 +56,7 @@ view_server <- function(id, parentSession, activeData) {
       key_column <- names(data_list[[1]])[1]
       # Combine all data frames by performing a full join on the first column
       combined_data <- reduce(data_list, full_join, by = key_column)
-      if (nrow(combined_data) < 30) {
-        combined_data <- as.data.frame(t(combined_data))
-      }
+      combined_data <- as.data.frame(t(combined_data))
       table_data(combined_data)
       waiter_hide()
       showModal(modalDialog(

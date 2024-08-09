@@ -1,6 +1,6 @@
 unzip_file <- function(zip_path, dest_path) {
   tryCatch({ 
-  unzip(zip_path, exdir = dest_path)
+    unzip(zip_path, exdir = dest_path)
   }, error = function(e) {
     showModal(modalDialog(
       title = "Error",
@@ -23,6 +23,7 @@ download_file <- function(url, dest_path, extract_path, file_name) {
       unzip_file(full_dest_path, extract_path)
       file.remove(full_dest_path)
     }
+    files <- list.files("data",extract_path, full.names = TRUE)
     showModal(modalDialog(
       title = "Success",
       "File downloaded and processed successfully.",
@@ -44,9 +45,20 @@ download_file <- function(url, dest_path, extract_path, file_name) {
 }
 download_census_data <- function(c_year, c_pack, c_geo, c_area, dest_path, extract_path){
   url <- paste0("https://www.abs.gov.au/census/find-census-data/datapacks/download/", c_year, "_", c_pack, "_", c_geo, "_for_", c_area, "_short-header.zip")
+  print(url)
   file_name <- paste0(c_year, "_", c_pack, "_", c_geo, "_for_", c_area, "_short-header.zip")
   download_file(url, dest_path, extract_path, file_name)
   files <- list.files(extract_path, full.names = TRUE) # Get full path
+  if (length(files) == 0) {
+    unlink(extract_path, recursive = TRUE)
+    waiter_hide()
+    showModal(modalDialog(
+      title = "Failure",
+      "File downloaded failed.",
+      easyClose = TRUE,
+      footer = NULL
+    ))
+  }
   file.rename(files[1], file.path(extract_path, "Tables"))
 }
 read_excel_sheets <- function(file) {

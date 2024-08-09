@@ -4,32 +4,34 @@ invisible(sapply(list.files("R", full.names = TRUE, recursive = TRUE), function(
 ui <- fluidPage(
   tags$style(
     ".file-list-container {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    
-    .file-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      margin-bottom: 10px;
-    }
-    
-    .file-name {
-      margin-right: 10px;
-    }
-    
-    .file-actions {
-      display: flex;
-      align-items: center;
-    }
-    
-    .file-actions > a,
-    .file-actions > button {
-      margin-left: 10px;
-    }"
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.file-name {
+  margin-right: 10px;
+  text-decoration: none;
+  color: #337ab7;
+}
+
+.file-actions {
+  display: flex;
+  align-items: center;
+}
+
+.file-actions .btn-danger {
+  margin-left: 10px;
+}"
   ),
   autoWaiter(),
   # rest of your UI definition
