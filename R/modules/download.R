@@ -181,7 +181,6 @@ download_server <- function(id, parentSession, activeData) {
             color = transparent(.5)
           )
           data_name <- basename(file)
-          
           dir_path <- here("data", data_name)
           if (dir.exists(dir_path)) {
             unlink(dir_path, recursive = TRUE)

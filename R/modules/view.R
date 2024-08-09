@@ -14,7 +14,8 @@ view_ui <- function(id) {
                        dataTableOutput(ns("tableIndex"))
                        ),
               tabPanel("Data Table", 
-                       dataTableOutput(ns("dataTable"))
+                       dataTableOutput(ns("dataTable")),
+                       downloadButton(ns("downloadCombinedData"), "Download Data CSV")
                        ),
               tabPanel("Column Information", dataTableOutput(ns("columnIndex")))
             )
@@ -57,6 +58,8 @@ view_server <- function(id, parentSession, activeData) {
       # Combine all data frames by performing a full join on the first column
       combined_data <- reduce(data_list, full_join, by = key_column)
       combined_data <- as.data.frame(t(combined_data))
+      #save as csv
+      write.csv(combined_data, here("data",file, "combined_data.csv"), row.names = FALSE)
       table_data(combined_data)
       waiter_hide()
       showModal(modalDialog(
@@ -84,5 +87,28 @@ view_server <- function(id, parentSession, activeData) {
     output$selectedTableName <- renderText({
       paste("Selected Table:", table_selected())
     })
+    output$downloadCombinedData <- downloadHandler(
+      filename = function() {
+        file <- activeData()
+        table <- table_selected()
+        paste(file,"_", table,"_", Sys.Date(), ".csv", sep = "")
+      },
+      content = function(file) {
+        combined_data_path <- here("data", "combined_data.csv")
+        tryCatch({
+          if (file.exists(combined_data_path)) {
+            file.copy(combined_data_path, file)
+          } else {
+            stop("Combined data file not found at: ", combined_data_path)
+          }
+        }, error = function(e) {
+          # Log the error
+          message("Error in downloadHandler: ", e$message)
+          # Write the error message to the file so the user can see what went wrong
+          writeLines(paste("Error:", e$message), file)
+        })
+      },
+      contentType = "text/csv"
+    )
   })
 }

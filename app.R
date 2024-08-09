@@ -40,13 +40,8 @@ ui <- fluidPage(
   #           href='https://www.yourwebsite.com'>
   #           <img id='yourlogo' src='your-logo.png'>
   #       </a>"),
-  tabsetPanel(id = "tabs", selected = "home_tab",
+  tabsetPanel(id = "tabs", selected = "download_tab",
               # Home tab
-              tabPanel(
-                value = "home_tab", 
-                h4(id = "nav_title", "Home"),
-                home_ui(id = "home")
-              ),
               # Download tab
               tabPanel(
                 value = "download_tab",
@@ -58,6 +53,11 @@ ui <- fluidPage(
                 value = "view_tab",
                 h4(id = "nav_title", "View"),
                 view_ui(id = "view")
+              ),
+              tabPanel(
+                value = "home_tab", 
+                h4(id = "nav_title", "About"),
+                home_ui(id = "home")
               ),
               # Map tab
               # tabPanel(
@@ -72,7 +72,6 @@ ui <- fluidPage(
     # Footer content here
   )
 )
-
 # Define server logic
 server <- function(input, output, session) {
   activeData <- reactiveVal(NULL)
