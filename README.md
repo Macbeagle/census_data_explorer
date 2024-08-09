@@ -13,9 +13,9 @@ The Census Data Explorer is a Shiny application designed to facilitate the brows
 
 ### Prerequisites
 
-The application will install the necessary packages on run.
-May require admin permission if not in user files to work.
+The application will install the necessary packages when run.
+It may require admin permission if not in user files to work.
 
 ## Licence 
-ABS census data is licenced under Creative Commons Attribution
+ABS census data is licenced under Creative Commons Attribution.\
 This application is licenced under the MIT licence - See the LICENCE.MD file for details.
