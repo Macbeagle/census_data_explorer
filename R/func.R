@@ -44,6 +44,7 @@ download_file <- function(url, dest_path, extract_path, file_name) {
   })
 }
 download_census_data <- function(c_year, c_pack, c_geo, c_area, dest_path, extract_path){
+  waiter_show(html = spin_3(), color = transparent(.5))
   url <- paste0("https://www.abs.gov.au/census/find-census-data/datapacks/download/", c_year, "_", c_pack, "_", c_geo, "_for_", c_area, "_short-header.zip")
   print(url)
   file_name <- paste0(c_year, "_", c_pack, "_", c_geo, "_for_", c_area, "_short-header.zip")
@@ -60,6 +61,7 @@ download_census_data <- function(c_year, c_pack, c_geo, c_area, dest_path, extra
     ))
   }
   file.rename(files[1], file.path(extract_path, "Tables"))
+  waiter_hide()
 }
 read_excel_sheets <- function(file) {
   tables <- excel_sheets(file)

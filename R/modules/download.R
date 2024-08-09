@@ -46,6 +46,10 @@ download_server <- function(id, parentSession, activeData) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     files_reactive <- reactiveVal(list.files("data", full.names = TRUE))
+    r_year <- reactiveVal(NULL)
+    r_pack <- reactiveVal(NULL)
+    r_geo <- reactiveVal(NULL)
+    r_area <- reactiveVal(NULL)
     # Dynamic update for geography options based on selected DataPack type
     observe({
       if (input$dataPackType == "TSP") {
@@ -132,14 +136,14 @@ download_server <- function(id, parentSession, activeData) {
       req(input$censusYear, input$dataPackType, input$geography, input$area)  # Ensure all inputs are filled in
       # Set up paths for download and extraction
       # Call your function
-      waiter_show( # show the waiter
-        html = spin_3(), 
-        color = transparent(.5)
-      )
       c_year = input$censusYear
       c_pack = input$dataPackType
       c_geo = input$geography
       c_area = input$area
+      r_year(c_year)
+      r_pack(c_pack)
+      r_geo(c_geo)
+      r_area(c_area)
       directory <- paste("Census", c_year, c_pack, c_geo, c_area, sep = "_")
       print(directory)
       if (dir.exists(directory)) {
@@ -151,15 +155,43 @@ download_server <- function(id, parentSession, activeData) {
         ))
         return()
       }
+      if (c_geo %in% c("SA1", "MB")) {
+        showModal(modalDialog(
+          title = "Warning",
+          "You are about to download data for SA1 or Mesh Block level. This data make take a significant amount of time to load in the view tab. Do you wish to continue?",
+          footer = tagList(
+            modalButton("Cancel"),
+            actionButton(ns("okDownload"), "OK")
+          )
+        ))
+      } else {
+        # If not SA1 or MB, proceed with download directly
+        download_census_data(
+          input$censusYear,
+          input$dataPackType,
+          input$geography,
+          input$area,
+          dest_path = here("data", directory),
+          extract_path = here("data", directory)
+        )
+      }
+    })
+    observeEvent(input$okDownload, {
+      c_year = r_year()
+      c_pack = r_pack()
+      c_geo = r_geo()
+      c_area = r_area()
+      print("test")
+      directory <- paste("Census", c_year, c_pack, c_geo, c_area, sep = "_")
+      removeModal()
       download_census_data(
         c_year,
         c_pack,
         c_geo,
         c_area,
-        dest_path <- here("data", directory),
-        extract_path <- here("data", directory)
+        dest_path = here("data", directory),
+        extract_path = here("data", directory)
       )
-      waiter_hide()
     })
     observe({
       files <- files_reactive()
