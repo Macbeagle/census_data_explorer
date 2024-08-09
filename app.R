@@ -53,12 +53,12 @@ ui <- fluidPage(
                 value = "view_tab",
                 h4(id = "nav_title", "View"),
                 view_ui(id = "view")
-              ),
-              tabPanel(
-                value = "home_tab", 
-                h4(id = "nav_title", "About"),
-                home_ui(id = "home")
-              ),
+              )
+              # tabPanel(
+              #   value = "home_tab", 
+              #   h4(id = "nav_title", "About"),
+              #   home_ui(id = "home")
+              # ),
               # Map tab
               # tabPanel(
               #   value = "map_tab",
